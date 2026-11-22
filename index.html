@@ -480,25 +480,7 @@
       border: 1px solid #4b5563;
     }
 
-    .drag-rank-badge {
-      display: none;
-      position: absolute;
-      top: 6px;
-      left: 6px;
-      background: rgba(0, 0, 0, 0.75);
-      color: #fff;
-      font-size: 0.7rem;
-      padding: 2px 6px;
-      border-radius: 4px;
-      cursor: grab;
-      z-index: 5;
-    }
-
-    body.is-edit .drag-rank-badge {
-      display: inline-block;
-    }
-
-    /* Mobile Layout (Matches Screenshot: Title Top, 1st Left, 2nd & 3rd Stacked Right) */
+    /* Mobile Layout (Title Top, 1st Left, 2nd & 3rd Stacked Right) */
     @media (max-width: 640px) {
       header {
         padding: 24px 16px 18px;
@@ -578,7 +560,7 @@
       grid-area: auto !important;
     }
 
-    /* Search Modal */
+    /* Search & Manual Registration Modal */
     .modal-backdrop {
       display: none;
       position: fixed;
@@ -599,8 +581,8 @@
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
       width: 100%;
-      max-width: 620px;
-      max-height: 85vh;
+      max-width: 640px;
+      max-height: 90vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -619,12 +601,48 @@
       font-weight: 700;
     }
 
+    .modal-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+    }
+
+    .modal-tab-btn {
+      flex: 1;
+      padding: 11px 14px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .modal-tab-btn.active {
+      color: var(--text-main);
+      border-bottom-color: var(--text-main);
+      background: var(--bg-panel);
+    }
+
     .modal-body {
-      padding: 16px 20px;
+      padding: 18px 20px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 14px;
+    }
+
+    .tab-pane {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .tab-pane.active {
+      display: flex;
     }
 
     .search-controls {
@@ -633,7 +651,7 @@
       flex-wrap: wrap;
     }
 
-    .search-select, .search-input {
+    .search-select, .search-input, .form-input {
       background: var(--bg-page);
       border: 1px solid var(--border-subtle);
       color: var(--text-main);
@@ -699,6 +717,57 @@
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+
+    /* Manual Form */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #e5e7eb;
+    }
+
+    .form-group label span.req {
+      color: #f87171;
+      margin-left: 4px;
+    }
+
+    .form-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .manual-image-preview-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .manual-preview-box {
+      width: 84px;
+      aspect-ratio: 2 / 3;
+      background: var(--bg-slot);
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 4px;
+    }
+
+    .manual-preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .custom-image-section {
@@ -778,33 +847,79 @@
     <div class="categories-grid" id="categoriesGrid"></div>
   </main>
 
-  <!-- AniList Search & Custom Image Modal -->
+  <!-- AniList Search & Manual Registration Modal -->
   <div class="modal-backdrop" id="searchModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3 id="modalTitle">AniListから作品・キャラクターを検索</h3>
+        <h3 id="modalTitle">作品・キャラクターを選択</h3>
         <button class="btn" id="closeModalBtn" style="padding:4px 10px;">✕</button>
       </div>
+
+      <div class="modal-tabs">
+        <button class="modal-tab-btn active" data-tab="anilist">AniListから検索</button>
+        <button class="modal-tab-btn" data-tab="manual">手動で自由登録（未登録作品など）</button>
+      </div>
+
       <div class="modal-body">
-        <div class="search-controls">
-          <select id="searchType" class="search-select">
-            <option value="MANGA">Manga</option>
-            <option value="ANIME">Anime</option>
-            <option value="CHARACTER">Character</option>
-          </select>
-          <input type="text" id="searchQuery" class="search-input" placeholder="タイトル・キャラ名を入力 (日本語 / 英語)" />
-          <button class="btn btn-primary" id="runSearchBtn">検索</button>
+        <!-- Tab 1: AniList Search -->
+        <div class="tab-pane active" id="tab-anilist">
+          <div class="search-controls">
+            <select id="searchType" class="search-select">
+              <option value="MANGA">Manga</option>
+              <option value="ANIME">Anime</option>
+              <option value="CHARACTER">Character</option>
+            </select>
+            <input type="text" id="searchQuery" class="search-input" placeholder="タイトル・キャラ名を入力 (日本語 / 英語)" />
+            <button class="btn btn-primary" id="runSearchBtn">検索</button>
+          </div>
+
+          <div id="searchStatus" style="font-size:0.82rem; color:var(--text-muted);"></div>
+          <div class="search-results" id="searchResults"></div>
+
+          <div class="custom-image-section">
+            <span>※ 登録済みの作品の画像だけ差し替えたい場合:</span>
+            <label class="btn" style="padding:6px 10px; font-size:0.78rem;">
+              画像をアップロードして差し替え
+              <input type="file" id="customImageInput" accept="image/*" style="display:none;">
+            </label>
+          </div>
         </div>
 
-        <div id="searchStatus" style="font-size:0.82rem; color:var(--text-muted);"></div>
-        <div class="search-results" id="searchResults"></div>
+        <!-- Tab 2: Manual Registration -->
+        <div class="tab-pane" id="tab-manual">
+          <div class="form-group">
+            <label>Title（英語タイトル・メイン表記）<span class="req">*</span></label>
+            <input type="text" id="manualTitleEn" class="form-input" placeholder="例: My Favorite New Manga" />
+          </div>
 
-        <div class="custom-image-section">
-          <span>※ PNG保存時に画像が消える場合や独自画像にしたい場合:</span>
-          <label class="btn" style="padding:6px 10px; font-size:0.78rem;">
-            画像をアップロードして差し替え
-            <input type="file" id="customImageInput" accept="image/*" style="display:none;">
-          </label>
+          <div class="form-group">
+            <label>Native Title（日本語タイトル・小さく下に表示）</label>
+            <input type="text" id="manualTitleNative" class="form-input" placeholder="例: お気に入りの新作漫画" />
+          </div>
+
+          <div class="form-group">
+            <label>画像（ファイル選択 または 画像URL）<span class="req">*</span></label>
+            <div class="manual-image-preview-row">
+              <div class="manual-preview-box" id="manualPreviewBox">プレビュー</div>
+              <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+                <label class="btn" style="width:fit-content;">
+                  📁 端末から画像を選択
+                  <input type="file" id="manualImageFile" accept="image/*" style="display:none;">
+                </label>
+                <input type="url" id="manualImageUrl" class="form-input" placeholder="または画像URLを貼り付け (https://...)" />
+                <span class="form-hint">※ 端末から選択した画像はJSON内に自動保存されます（PNG出力時も確実に表示されます）。</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>リンク先URL（任意・公式サイトやSNSなど）</label>
+            <input type="url" id="manualLinkUrl" class="form-input" placeholder="https://..." />
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
+            <button class="btn btn-primary" id="saveManualBtn">この内容で登録する</button>
+          </div>
         </div>
       </div>
     </div>
@@ -835,6 +950,7 @@
     let appData = structuredClone(defaultData);
     let currentYear = "2026";
     let editingTarget = { catId: null, rankIndex: null };
+    let manualImageDataUrl = "";
 
     // Toast helper
     function showToast(msg) {
@@ -845,7 +961,7 @@
       el._timer = setTimeout(() => el.classList.remove('show'), 2600);
     }
 
-    // Load Data (In edit mode: prefer localStorage if present, fallback to data.json; In view mode: always load data.json)
+    // Load Data
     async function initData() {
       let loadedFromServer = null;
       try {
@@ -1039,7 +1155,6 @@
         const img = document.createElement('img');
         img.src = item.image;
         img.alt = item.titleEn || '';
-        img.crossOrigin = 'anonymous';
         link.appendChild(img);
         coverBox.appendChild(link);
       } else {
@@ -1138,7 +1253,6 @@
     // Export Card to PNG
     async function exportCardAsPng(cardEl, catName) {
       showToast('PNG画像を生成中...');
-      // Temporarily hide edit overlays & enforce PC 3-column proportions
       document.body.classList.remove('is-edit');
       cardEl.classList.add('force-desktop-export');
 
@@ -1151,34 +1265,64 @@
         });
 
         const link = document.createElement('a');
-        const safeName = catName.trim().replace(/[^\w\u3040-\u30ff\u4e00-\u9faf-]+/g, '_') || 'category';
+        const safeName = catName.trim().replace(/[^\w぀-ヿ一-龯-]+/g, '_') || 'category';
         link.download = `${currentYear}_${safeName}.png`;
         link.href = dataUrl;
         link.click();
         showToast('PNGをダウンロードしました！');
       } catch (err) {
         console.error(err);
-        alert('外部画像の制限（CORS）により一部の画像が書き出せませんでした。\n該当枠の「変更 / 検索」モーダル下部からローカル画像をアップロードして差し替えると確実に保存できます。');
+        alert('外部画像の制限（CORS）により一部の画像が書き出せませんでした。
+該当枠の「変更 / 検索」モーダルからローカル画像をアップロードして差し替えると確実に保存できます。');
       } finally {
         cardEl.classList.remove('force-desktop-export');
         if (isEditMode) document.body.classList.add('is-edit');
       }
     }
 
-    // AniList GraphQL Search
+    // Modal & Tabs Setup
     const searchModal = document.getElementById('searchModal');
     const searchInput = document.getElementById('searchQuery');
     const searchType = document.getElementById('searchType');
     const searchResultsEl = document.getElementById('searchResults');
     const searchStatusEl = document.getElementById('searchStatus');
 
+    document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.modal-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
     function openSearchModal(catId, rankIndex) {
       editingTarget = { catId, rankIndex };
       document.getElementById('modalTitle').textContent = `${rankIndex + 1}位 の作品・キャラクターを選択`;
       searchResultsEl.innerHTML = '';
       searchStatusEl.textContent = '';
+
+      // Pre-fill manual form if an item already exists in this slot
+      const cat = (appData.years[currentYear] || []).find(c => c.id === catId);
+      const existing = cat ? cat.items[rankIndex] : null;
+      document.getElementById('manualTitleEn').value = existing?.titleEn || '';
+      document.getElementById('manualTitleNative').value = existing?.titleNative || '';
+      document.getElementById('manualLinkUrl').value = existing?.url || '';
+      document.getElementById('manualImageUrl').value = (existing?.image && !existing.image.startsWith('data:')) ? existing.image : '';
+      manualImageDataUrl = existing?.image || '';
+      updateManualPreview(manualImageDataUrl);
+
       searchModal.classList.add('open');
       setTimeout(() => searchInput.focus(), 50);
+    }
+
+    function updateManualPreview(src) {
+      const box = document.getElementById('manualPreviewBox');
+      if (src) {
+        box.innerHTML = `<img src="${src}" alt="preview">`;
+      } else {
+        box.textContent = 'プレビュー';
+      }
     }
 
     document.getElementById('closeModalBtn').onclick = () => {
@@ -1188,6 +1332,7 @@
       if (e.target === searchModal) searchModal.classList.remove('open');
     };
 
+    // AniList GraphQL Search
     document.getElementById('runSearchBtn').onclick = searchAniList;
     searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') searchAniList();
@@ -1253,7 +1398,7 @@
             }));
 
         if (items.length === 0) {
-          searchStatusEl.textContent = '見つかりませんでした。別のキーワード（英語名や原題）でお試しください。';
+          searchStatusEl.textContent = '見つかりませんでした。別のキーワードか「手動で自由登録」タブをお試しください。';
           return;
         }
 
@@ -1279,6 +1424,52 @@
       }
     }
 
+    // Manual Form Handlers
+    document.getElementById('manualImageFile').addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        manualImageDataUrl = reader.result;
+        document.getElementById('manualImageUrl').value = '';
+        updateManualPreview(manualImageDataUrl);
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+    });
+
+    document.getElementById('manualImageUrl').addEventListener('input', (e) => {
+      const url = e.target.value.trim();
+      if (url) {
+        manualImageDataUrl = url;
+        updateManualPreview(url);
+      }
+    });
+
+    document.getElementById('saveManualBtn').addEventListener('click', () => {
+      const titleEn = document.getElementById('manualTitleEn').value.trim();
+      const titleNative = document.getElementById('manualTitleNative').value.trim();
+      const linkUrl = document.getElementById('manualLinkUrl').value.trim();
+      const imgUrlInput = document.getElementById('manualImageUrl').value.trim();
+      const finalImage = manualImageDataUrl || imgUrlInput;
+
+      if (!titleEn) {
+        alert('Title（英語タイトル・メイン表記）を入力してください。');
+        return;
+      }
+      if (!finalImage) {
+        alert('画像を選択するか、画像URLを入力してください。');
+        return;
+      }
+
+      applySelection({
+        titleEn,
+        titleNative,
+        image: finalImage,
+        url: linkUrl
+      });
+    });
+
     function applySelection(entry) {
       const cat = (appData.years[currentYear] || []).find(c => c.id === editingTarget.catId);
       if (cat) {
@@ -1290,7 +1481,7 @@
       showToast('登録しました！');
     }
 
-    // Custom local image upload (fallback for CORS or custom art)
+    // Custom local image upload for existing item
     document.getElementById('customImageInput').addEventListener('change', (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
