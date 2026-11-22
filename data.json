@@ -2,6 +2,78 @@
   "years": {
     "2026": [
       {
+        "id": "cat-1795325049314",
+        "name": "Fantasy",
+        "items": [
+          {
+            "titleEn": "The Journey of a Dark Elf with Fading Powers",
+            "titleNative": "魔力枯れのダークエルフ",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx202539-3fUCreZAcWZJ.jpg",
+            "url": "https://anilist.co/manga/202539"
+          },
+          {
+            "titleEn": "The Oracles of Kami",
+            "titleNative": "神ヨムふたり",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx209506-4XScg4Y36SYo.jpg",
+            "url": "https://anilist.co/manga/209506"
+          },
+          {
+            "titleEn": "Maison and the Man-Eating Apartment",
+            "titleNative": "人喰いマンションと大家のメゾン",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx187845-Rl8bOJrlPj2W.jpg",
+            "url": "https://anilist.co/manga/187845"
+          }
+        ]
+      },
+      {
+        "id": "cat-1795323842934",
+        "name": "Comedy",
+        "items": [
+          {
+            "titleEn": "Hey! Devil Girl!",
+            "titleNative": "あっ、悪魔ちゃん",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx212970-VsdUyJVvUZrt.jpg",
+            "url": "https://anilist.co/manga/212970"
+          },
+          {
+            "titleEn": "Shippo to Gekirin",
+            "titleNative": "しっぽと逆鱗",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx210602-rwWHoEWqZNLq.jpg",
+            "url": "https://anilist.co/manga/210602"
+          },
+          {
+            "titleEn": "Someone Hertz",
+            "titleNative": "さむわんへるつ",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx198817-6WrNkObMtjkN.jpg",
+            "url": "https://anilist.co/manga/198817"
+          }
+        ]
+      },
+      {
+        "id": "cat-1795325009081",
+        "name": "Rom-Com",
+        "items": [
+          {
+            "titleEn": "Bus for Two",
+            "titleNative": "ふたりバス",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx201855-7dEgpKSZhWsH.jpg",
+            "url": "https://anilist.co/manga/201855"
+          },
+          {
+            "titleEn": "Oh My Panda!",
+            "titleNative": "惚れたはれたパンダ",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx202644-WvVNS83XErBZ.jpg",
+            "url": "https://anilist.co/manga/202644"
+          },
+          {
+            "titleEn": "Dazzling Spring Days",
+            "titleNative": "春くらり",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx198674-NlQIpGVlfa3l.jpg",
+            "url": "https://anilist.co/manga/198674"
+          }
+        ]
+      },
+      {
         "id": "cat-1",
         "name": "Mystery",
         "items": [
@@ -16,6 +88,25 @@
             "titleNative": "ウェイバーズ",
             "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx206621-DjWGGOUMnjNW.jpg",
             "url": "https://anilist.co/manga/206621"
+          },
+          null
+        ]
+      },
+      {
+        "id": "cat-1795324158258",
+        "name": "Action",
+        "items": [
+          {
+            "titleEn": "The Hero’s Bereaved Family",
+            "titleNative": "勇者遺族",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx207086-KzvY1LDR4BNq.jpg",
+            "url": "https://anilist.co/manga/207086"
+          },
+          {
+            "titleEn": "Meaheim",
+            "titleNative": "メアヘイム",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx194064-JihR0lF7sM6r.jpg",
+            "url": "https://anilist.co/manga/194064"
           },
           null
         ]
@@ -36,15 +127,6 @@
             "image": "https://s4.anilist.co/file/anilistcdn/character/large/b359220-DLrto9O0BtX2.png",
             "url": "https://anilist.co/character/359220"
           },
-          null
-        ]
-      },
-      {
-        "id": "cat-1795323842934",
-        "name": "Category Name",
-        "items": [
-          null,
-          null,
           null
         ]
       }
