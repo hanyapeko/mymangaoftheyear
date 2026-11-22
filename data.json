@@ -19,6 +19,34 @@
           },
           null
         ]
+      },
+      {
+        "id": "cat-1795323502434",
+        "name": "Character",
+        "items": [
+          {
+            "titleEn": "Amira",
+            "titleNative": "アミラ",
+            "image": "https://s4.anilist.co/file/anilistcdn/character/large/b382806-umq1lupkNZUF.png",
+            "url": "https://anilist.co/character/382806"
+          },
+          {
+            "titleEn": "Ryouma Kakiuchi",
+            "titleNative": "柿内遼馬",
+            "image": "https://s4.anilist.co/file/anilistcdn/character/large/b359220-DLrto9O0BtX2.png",
+            "url": "https://anilist.co/character/359220"
+          },
+          null
+        ]
+      },
+      {
+        "id": "cat-1795323842934",
+        "name": "Category Name",
+        "items": [
+          null,
+          null,
+          null
+        ]
       }
     ]
   }
