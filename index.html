@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MY MANGA OF THE YEAR — @panyapeko</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+
+  <style>
+    :root {
+      --bg-page: #141416;
+      --bg-card: #1d1e22;
+      --bg-slot: #3b3c40;
+      --bg-panel: #222328;
+      --border-subtle: #2e3036;
+      --text-main: #ffffff;
+      --text-muted: #9ca3af;
+      --accent: #ffffff;
+      --accent-inv: #141416;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      line-height: 1.4;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    /* Header */
+    header {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 36px 24px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .site-title-group h1 {
+      font-size: clamp(1.6rem, 3vw, 2.3rem);
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+    }
+
+    .site-title-group .subtitle {
+      margin-top: 6px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Year Switcher */
+    .year-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .year-nav {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .year-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .year-btn:hover {
+      color: var(--text-main);
+    }
+
+    .year-btn.active {
+      background: var(--text-main);
+      color: var(--bg-page);
+    }
+
+    .nav-arrow {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 1rem;
+      padding: 6px 10px;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .nav-arrow:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Edit Toolbar (only visible when ?edit=1) */
+    .edit-toolbar {
+      max-width: 1440px;
+      margin: 18px auto 0;
+      padding: 0 24px;
+      display: none;
+    }
+
+    body.is-edit .edit-toolbar {
+      display: block;
+    }
+
+    .toolbar-inner {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .toolbar-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      background: #ffffff;
+      color: #141416;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 7px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn:hover {
+      border-color: #6b7280;
+      background: #282a30;
+    }
+
+    .btn-primary {
+      background: #ffffff;
+      color: #141416;
+      border-color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: #e5e7eb;
+      border-color: #e5e7eb;
+    }
+
+    .btn-danger {
+      color: #f87171;
+    }
+
+    .btn-danger:hover {
+      border-color: #f87171;
+      background: rgba(248, 113, 113, 0.1);
+    }
+
+    /* Main Grid: PC 2 Columns, Mobile 1 Column */
+    main {
+      max-width: 1440px;
+      margin: 28px auto 0;
+      padding: 0 24px;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px;
+    }
+
+    @media (max-width: 960px) {
+      .categories-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+
+    /* Category Card Wrapper */
+    .category-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .category-edit-bar {
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    body.is-edit .category-edit-bar {
+      display: flex;
+    }
+
+    .drag-handle-cat {
+      cursor: grab;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      user-select: none;
+      padding: 2px 6px;
+    }
+
+    .cat-name-input {
+      background: var(--bg-page);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      min-width: 160px;
+      flex: 1;
+    }
+
+    /* Exportable Ranking Card (PC Layout: 3-column horizontal) */
+    .ranking-card {
+      background-color: var(--bg-card);
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1.05fr 1.35fr 0.72fr;
+      gap: 18px;
+      position: relative;
+      border-radius: 4px;
+    }
+
+    /* Left Column: Category Title & @panyapeko */
+    .card-header-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-right: 6px;
+    }
+
+    .cat-title-block h2 {
+      font-size: clamp(1.55rem, 2.2vw, 2.15rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      word-break: break-word;
+    }
+
+    .cat-title-block .of-the-year {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(0.95rem, 1.35vw, 1.25rem);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin-top: 8px;
+      color: #f3f4f6;
+    }
+
+    .card-account {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #e5e7eb;
+      margin-top: 16px;
+    }
+
+    /* Rank Slots (1st, 2nd, 3rd) */
+    .rank-col-1st {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rank-col-2nd-3rd {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .rank-item {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .cover-box {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      background-color: var(--bg-slot);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cover-box a {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .cover-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.25s ease;
+    }
+
+    .cover-box a:hover img {
+      transform: scale(1.03);
+    }
+
+    .empty-placeholder {
+      color: #d1d5db;
+      font-size: 0.78rem;
+      text-align: center;
+      padding: 8px;
+      user-select: none;
+    }
+
+    /* Rank Caption Below Cover */
+    .rank-meta {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .rank-label {
+      font-weight: 800;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .rank-1st .rank-label {
+      font-size: 1.45rem;
+    }
+
+    .rank-sub .rank-label {
+      font-size: 1.05rem;
+    }
+
+    .title-stack {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .title-en {
+      font-weight: 700;
+      color: #ffffff;
+      text-decoration: none;
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .title-en:hover {
+      text-decoration: underline;
+    }
+
+    .rank-1st .title-en {
+      font-size: 0.85rem;
+    }
+
+    .rank-sub .title-en {
+      font-size: 0.72rem;
+    }
+
+    .title-native {
+      color: #d1d5db;
+      line-height: 1.25;
+      margin-top: 2px;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .rank-1st .title-native {
+      font-size: 0.68rem;
+    }
+
+    .rank-sub .title-native {
+      font-size: 0.58rem;
+    }
+
+    /* Edit Overlay Controls on Each Slot */
+    .slot-edit-controls {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 16, 20, 0.62);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    body.is-edit .cover-box:hover .slot-edit-controls,
+    body.is-edit .cover-box.is-empty .slot-edit-controls {
+      display: flex;
+      opacity: 1;
+    }
+
+    @media (hover: none) {
+      body.is-edit .slot-edit-controls {
+        display: flex;
+        opacity: 1;
+        background: rgba(15, 16, 20, 0.45);
+      }
+    }
+
+    .mini-btn {
+      background: #ffffff;
+      color: #141416;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 9px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .mini-btn.secondary {
+      background: rgba(30, 32, 38, 0.92);
+      color: #ffffff;
+      border: 1px solid #4b5563;
+    }
+
+    .drag-rank-badge {
+      display: none;
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      cursor: grab;
+      z-index: 5;
+    }
+
+    body.is-edit .drag-rank-badge {
+      display: inline-block;
+    }
+
+    /* Mobile Layout (Matches Screenshot: Title Top, 1st Left, 2nd & 3rd Stacked Right) */
+    @media (max-width: 640px) {
+      header {
+        padding: 24px 16px 18px;
+      }
+
+      main, .edit-toolbar {
+        padding: 0 16px;
+      }
+
+      .ranking-card:not(.force-desktop-export) {
+        padding: 20px 18px;
+        grid-template-columns: 1.45fr 0.85fr;
+        grid-template-areas:
+          "header header"
+          "first  secondthird";
+        gap: 14px;
+      }
+
+      .ranking-card:not(.force-desktop-export) .card-header-col {
+        grid-area: header;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding-right: 0;
+        margin-bottom: 2px;
+      }
+
+      .ranking-card:not(.force-desktop-export) .cat-title-block h2 {
+        font-size: 1.75rem;
+      }
+
+      .ranking-card:not(.force-desktop-export) .cat-title-block .of-the-year {
+        font-size: 1.05rem;
+        margin-top: 4px;
+      }
+
+      .ranking-card:not(.force-desktop-export) .card-account {
+        margin-top: 0;
+      }
+
+      .ranking-card:not(.force-desktop-export) .rank-col-1st {
+        grid-area: first;
+      }
+
+      .ranking-card:not(.force-desktop-export) .rank-col-2nd-3rd {
+        grid-area: secondthird;
+        gap: 12px;
+      }
+    }
+
+    /* Force PC 3-column layout when exporting PNG on mobile */
+    .ranking-card.force-desktop-export {
+      width: 960px !important;
+      padding: 36px !important;
+      grid-template-columns: 1.05fr 1.35fr 0.72fr !important;
+      grid-template-areas: none !important;
+      gap: 22px !important;
+    }
+
+    .ranking-card.force-desktop-export .card-header-col {
+      grid-area: auto !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      align-items: flex-start !important;
+    }
+
+    .ranking-card.force-desktop-export .cat-title-block h2 {
+      font-size: 2.35rem !important;
+    }
+
+    .ranking-card.force-desktop-export .cat-title-block .of-the-year {
+      font-size: 1.3rem !important;
+    }
+
+    .ranking-card.force-desktop-export .rank-col-1st,
+    .ranking-card.force-desktop-export .rank-col-2nd-3rd {
+      grid-area: auto !important;
+    }
+
+    /* Search Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 620px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .modal-body {
+      padding: 16px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .search-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .search-select, .search-input {
+      background: var(--bg-page);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 9px 12px;
+      border-radius: 7px;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .search-results {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .result-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result-card:hover {
+      border-color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    .result-card img {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      object-fit: cover;
+      background: var(--bg-slot);
+    }
+
+    .result-info {
+      padding: 8px;
+    }
+
+    .result-en {
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1.25;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .result-native {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .custom-image-section {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .status-toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ffffff;
+      color: #141416;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: all 0.2s ease;
+      z-index: 200;
+    }
+
+    .status-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="site-title-group">
+      <h1>MY MANGA OF THE YEAR</h1>
+      <div class="subtitle">@panyapeko</div>
+    </div>
+
+    <div class="year-controls">
+      <div class="year-nav">
+        <button class="nav-arrow" id="prevYearBtn" title="前の年">◀</button>
+        <div id="yearTabs" style="display:flex; gap:4px;"></div>
+        <button class="nav-arrow" id="nextYearBtn" title="次の年">▶</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Edit Mode Toolbar -->
+  <section class="edit-toolbar">
+    <div class="toolbar-inner">
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <span class="toolbar-badge">EDIT MODE</span>
+        <span style="font-size:0.82rem; color:var(--text-muted);">編集内容はブラウザに自動保存されます。公開時は「JSON書き出し」してGitHubにアップしてください。</span>
+      </div>
+      <div class="toolbar-actions">
+        <button class="btn" id="addYearBtn">＋ 年を追加</button>
+        <button class="btn" id="deleteYearBtn">この年を削除</button>
+        <button class="btn" id="addCategoryBtn">＋ カテゴリーを追加</button>
+        <label class="btn" style="cursor:pointer;">
+          JSON読込
+          <input type="file" id="importJsonInput" accept=".json" style="display:none;">
+        </label>
+        <button class="btn btn-primary" id="exportJsonBtn">JSON書き出し (data.json)</button>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="categories-grid" id="categoriesGrid"></div>
+  </main>
+
+  <!-- AniList Search & Custom Image Modal -->
+  <div class="modal-backdrop" id="searchModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalTitle">AniListから作品・キャラクターを検索</h3>
+        <button class="btn" id="closeModalBtn" style="padding:4px 10px;">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="search-controls">
+          <select id="searchType" class="search-select">
+            <option value="MANGA">Manga</option>
+            <option value="ANIME">Anime</option>
+            <option value="CHARACTER">Character</option>
+          </select>
+          <input type="text" id="searchQuery" class="search-input" placeholder="タイトル・キャラ名を入力 (日本語 / 英語)" />
+          <button class="btn btn-primary" id="runSearchBtn">検索</button>
+        </div>
+
+        <div id="searchStatus" style="font-size:0.82rem; color:var(--text-muted);"></div>
+        <div class="search-results" id="searchResults"></div>
+
+        <div class="custom-image-section">
+          <span>※ PNG保存時に画像が消える場合や独自画像にしたい場合:</span>
+          <label class="btn" style="padding:6px 10px; font-size:0.78rem;">
+            画像をアップロードして差し替え
+            <input type="file" id="customImageInput" accept="image/*" style="display:none;">
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-toast" id="toast"></div>
+
+  <script>
+    const STORAGE_KEY = 'my_manga_of_the_year_v1';
+    const isEditMode = new URLSearchParams(window.location.search).get('edit') === '1';
+    if (isEditMode) {
+      document.body.classList.add('is-edit');
+    }
+
+    // Default initial data
+    const defaultData = {
+      years: {
+        "2026": [
+          {
+            id: "cat-1",
+            name: "Category Name",
+            items: [null, null, null]
+          }
+        ]
+      }
+    };
+
+    let appData = structuredClone(defaultData);
+    let currentYear = "2026";
+    let editingTarget = { catId: null, rankIndex: null };
+
+    // Toast helper
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(el._timer);
+      el._timer = setTimeout(() => el.classList.remove('show'), 2600);
+    }
+
+    // Load Data (In edit mode: prefer localStorage if present, fallback to data.json; In view mode: always load data.json)
+    async function initData() {
+      let loadedFromServer = null;
+      try {
+        const res = await fetch('./data.json?t=' + Date.now());
+        if (res.ok) {
+          loadedFromServer = await res.json();
+        }
+      } catch (e) {
+        // Local file:// open or no data.json yet
+      }
+
+      if (isEditMode) {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          try {
+            appData = JSON.parse(saved);
+          } catch (e) {
+            appData = loadedFromServer || structuredClone(defaultData);
+          }
+        } else if (loadedFromServer) {
+          appData = loadedFromServer;
+        }
+      } else {
+        if (loadedFromServer) {
+          appData = loadedFromServer;
+        }
+      }
+
+      const years = Object.keys(appData.years).sort();
+      if (years.length > 0 && !appData.years[currentYear]) {
+        currentYear = years[years.length - 1];
+      }
+      render();
+    }
+
+    function saveLocal() {
+      if (isEditMode) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+      }
+    }
+
+    // Render Year Tabs & Categories
+    function render() {
+      renderYearTabs();
+      renderCategories();
+    }
+
+    function renderYearTabs() {
+      const years = Object.keys(appData.years).sort();
+      const tabsEl = document.getElementById('yearTabs');
+      tabsEl.innerHTML = '';
+
+      years.forEach(yr => {
+        const btn = document.createElement('button');
+        btn.className = 'year-btn' + (yr === currentYear ? ' active' : '');
+        btn.textContent = yr;
+        btn.onclick = () => {
+          currentYear = yr;
+          render();
+        };
+        tabsEl.appendChild(btn);
+      });
+
+      const idx = years.indexOf(currentYear);
+      const prevBtn = document.getElementById('prevYearBtn');
+      const nextBtn = document.getElementById('nextYearBtn');
+      prevBtn.disabled = idx <= 0;
+      nextBtn.disabled = idx === -1 || idx >= years.length - 1;
+
+      prevBtn.onclick = () => {
+        if (idx > 0) {
+          currentYear = years[idx - 1];
+          render();
+        }
+      };
+      nextBtn.onclick = () => {
+        if (idx < years.length - 1) {
+          currentYear = years[idx + 1];
+          render();
+        }
+      };
+    }
+
+    function renderCategories() {
+      const grid = document.getElementById('categoriesGrid');
+      grid.innerHTML = '';
+
+      const categories = appData.years[currentYear] || [];
+
+      categories.forEach((cat) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'category-wrapper';
+        wrapper.dataset.catId = cat.id;
+
+        // Edit Bar above card (only in edit mode)
+        const editBar = document.createElement('div');
+        editBar.className = 'category-edit-bar';
+        editBar.innerHTML = `
+          <span class="drag-handle-cat" title="ドラッグしてカテゴリー順を変更">⋮⋮</span>
+          <input type="text" class="cat-name-input" value="${escapeHtml(cat.name)}" placeholder="Category Name" />
+          <button class="btn download-png-btn" style="padding:5px 10px; font-size:0.78rem;">PNG保存</button>
+          <button class="btn btn-danger delete-cat-btn" style="padding:5px 10px; font-size:0.78rem;">削除</button>
+        `;
+
+        const nameInput = editBar.querySelector('.cat-name-input');
+        nameInput.addEventListener('input', (e) => {
+          cat.name = e.target.value;
+          const h2 = card.querySelector('.cat-title-block h2');
+          if (h2) h2.textContent = cat.name || 'Category Name';
+          saveLocal();
+        });
+
+        editBar.querySelector('.delete-cat-btn').addEventListener('click', () => {
+          if (confirm(`「${cat.name}」を削除しますか？`)) {
+            appData.years[currentYear] = appData.years[currentYear].filter(c => c.id !== cat.id);
+            saveLocal();
+            renderCategories();
+          }
+        });
+
+        // Main Ranking Card
+        const card = document.createElement('article');
+        card.className = 'ranking-card';
+
+        // Left Column (Header)
+        const headerCol = document.createElement('div');
+        headerCol.className = 'card-header-col';
+        headerCol.innerHTML = `
+          <div class="cat-title-block">
+            <h2>${escapeHtml(cat.name || 'Category Name')}</h2>
+            <div class="of-the-year">OF THE YEAR</div>
+          </div>
+          <div class="card-account">@panyapeko</div>
+        `;
+
+        // Center Column (1st)
+        const col1st = document.createElement('div');
+        col1st.className = 'rank-col-1st';
+        col1st.appendChild(createRankSlot(cat, 0, '1st', true));
+
+        // Right Column (2nd & 3rd)
+        const colSub = document.createElement('div');
+        colSub.className = 'rank-col-2nd-3rd';
+        colSub.appendChild(createRankSlot(cat, 1, '2nd', false));
+        colSub.appendChild(createRankSlot(cat, 2, '3rd', false));
+
+        card.appendChild(headerCol);
+        card.appendChild(col1st);
+        card.appendChild(colSub);
+
+        // PNG Download Handler
+        editBar.querySelector('.download-png-btn').addEventListener('click', () => {
+          exportCardAsPng(card, cat.name || 'ranking');
+        });
+
+        wrapper.appendChild(editBar);
+        wrapper.appendChild(card);
+        grid.appendChild(wrapper);
+      });
+
+      // Enable Drag & Drop sorting for categories in edit mode
+      if (isEditMode && window.Sortable) {
+        new Sortable(grid, {
+          animation: 150,
+          handle: '.drag-handle-cat',
+          onEnd: () => {
+            const newOrderIds = Array.from(grid.children).map(el => el.dataset.catId);
+            const list = appData.years[currentYear];
+            appData.years[currentYear] = newOrderIds.map(id => list.find(c => c.id === id));
+            saveLocal();
+          }
+        });
+      }
+    }
+
+    function createRankSlot(cat, index, label, isFirst) {
+      const item = cat.items[index];
+      const slot = document.createElement('div');
+      slot.className = `rank-item ${isFirst ? 'rank-1st' : 'rank-sub'}`;
+
+      const coverBox = document.createElement('div');
+      coverBox.className = 'cover-box' + (!item ? ' is-empty' : '');
+
+      if (item && item.image) {
+        const link = document.createElement('a');
+        link.href = item.url || '#';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        if (!item.url) link.onclick = (e) => e.preventDefault();
+
+        const img = document.createElement('img');
+        img.src = item.image;
+        img.alt = item.titleEn || '';
+        img.crossOrigin = 'anonymous';
+        link.appendChild(img);
+        coverBox.appendChild(link);
+      } else {
+        const empty = document.createElement('div');
+        empty.className = 'empty-placeholder';
+        empty.textContent = isEditMode ? '＋ 選択' : 'No pick';
+        coverBox.appendChild(empty);
+      }
+
+      // Edit controls (Select / Swap / Clear)
+      if (isEditMode) {
+        const controls = document.createElement('div');
+        controls.className = 'slot-edit-controls';
+
+        const selectBtn = document.createElement('button');
+        selectBtn.className = 'mini-btn';
+        selectBtn.textContent = item ? '変更 / 検索' : '作品・キャラ選択';
+        selectBtn.onclick = (e) => {
+          e.stopPropagation();
+          openSearchModal(cat.id, index);
+        };
+        controls.appendChild(selectBtn);
+
+        // Quick rank swap buttons (1st <-> 2nd <-> 3rd)
+        const swapRow = document.createElement('div');
+        swapRow.style.display = 'flex';
+        swapRow.style.gap = '4px';
+        [0, 1, 2].forEach(targetIdx => {
+          if (targetIdx === index) return;
+          const swapBtn = document.createElement('button');
+          swapBtn.className = 'mini-btn secondary';
+          swapBtn.textContent = `${targetIdx + 1}位と入替`;
+          swapBtn.onclick = (e) => {
+            e.stopPropagation();
+            const temp = cat.items[index];
+            cat.items[index] = cat.items[targetIdx];
+            cat.items[targetIdx] = temp;
+            saveLocal();
+            renderCategories();
+          };
+          swapRow.appendChild(swapBtn);
+        });
+        controls.appendChild(swapRow);
+
+        if (item) {
+          const clearBtn = document.createElement('button');
+          clearBtn.className = 'mini-btn secondary';
+          clearBtn.textContent = 'クリア';
+          clearBtn.onclick = (e) => {
+            e.stopPropagation();
+            cat.items[index] = null;
+            saveLocal();
+            renderCategories();
+          };
+          controls.appendChild(clearBtn);
+        }
+
+        coverBox.appendChild(controls);
+      }
+
+      // Meta row below image
+      const meta = document.createElement('div');
+      meta.className = 'rank-meta';
+
+      const rankNum = document.createElement('div');
+      rankNum.className = 'rank-label';
+      rankNum.textContent = label;
+      meta.appendChild(rankNum);
+
+      if (item) {
+        const titleStack = document.createElement('div');
+        titleStack.className = 'title-stack';
+
+        const titleEn = document.createElement('a');
+        titleEn.className = 'title-en';
+        titleEn.textContent = item.titleEn || '';
+        titleEn.href = item.url || '#';
+        titleEn.target = '_blank';
+        titleEn.rel = 'noopener noreferrer';
+        if (!item.url) titleEn.onclick = (e) => e.preventDefault();
+
+        const titleNative = document.createElement('div');
+        titleNative.className = 'title-native';
+        titleNative.textContent = item.titleNative || '';
+
+        titleStack.appendChild(titleEn);
+        if (item.titleNative) titleStack.appendChild(titleNative);
+        meta.appendChild(titleStack);
+      }
+
+      slot.appendChild(coverBox);
+      slot.appendChild(meta);
+      return slot;
+    }
+
+    // Export Card to PNG
+    async function exportCardAsPng(cardEl, catName) {
+      showToast('PNG画像を生成中...');
+      // Temporarily hide edit overlays & enforce PC 3-column proportions
+      document.body.classList.remove('is-edit');
+      cardEl.classList.add('force-desktop-export');
+
+      try {
+        await new Promise(r => setTimeout(r, 120));
+        const dataUrl = await htmlToImage.toPng(cardEl, {
+          pixelRatio: 2,
+          backgroundColor: '#1d1e22',
+          cacheBust: true
+        });
+
+        const link = document.createElement('a');
+        const safeName = catName.trim().replace(/[^\w\u3040-\u30ff\u4e00-\u9faf-]+/g, '_') || 'category';
+        link.download = `${currentYear}_${safeName}.png`;
+        link.href = dataUrl;
+        link.click();
+        showToast('PNGをダウンロードしました！');
+      } catch (err) {
+        console.error(err);
+        alert('外部画像の制限（CORS）により一部の画像が書き出せませんでした。\n該当枠の「変更 / 検索」モーダル下部からローカル画像をアップロードして差し替えると確実に保存できます。');
+      } finally {
+        cardEl.classList.remove('force-desktop-export');
+        if (isEditMode) document.body.classList.add('is-edit');
+      }
+    }
+
+    // AniList GraphQL Search
+    const searchModal = document.getElementById('searchModal');
+    const searchInput = document.getElementById('searchQuery');
+    const searchType = document.getElementById('searchType');
+    const searchResultsEl = document.getElementById('searchResults');
+    const searchStatusEl = document.getElementById('searchStatus');
+
+    function openSearchModal(catId, rankIndex) {
+      editingTarget = { catId, rankIndex };
+      document.getElementById('modalTitle').textContent = `${rankIndex + 1}位 の作品・キャラクターを選択`;
+      searchResultsEl.innerHTML = '';
+      searchStatusEl.textContent = '';
+      searchModal.classList.add('open');
+      setTimeout(() => searchInput.focus(), 50);
+    }
+
+    document.getElementById('closeModalBtn').onclick = () => {
+      searchModal.classList.remove('open');
+    };
+    searchModal.onclick = (e) => {
+      if (e.target === searchModal) searchModal.classList.remove('open');
+    };
+
+    document.getElementById('runSearchBtn').onclick = searchAniList;
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') searchAniList();
+    });
+
+    async function searchAniList() {
+      const q = searchInput.value.trim();
+      const type = searchType.value;
+      if (!q) return;
+
+      searchStatusEl.textContent = 'AniListを検索中...';
+      searchResultsEl.innerHTML = '';
+
+      const isChar = type === 'CHARACTER';
+      const query = isChar
+        ? `query ($search: String) {
+            Page(page: 1, perPage: 12) {
+              characters(search: $search, sort: FAVOURITES_DESC) {
+                id
+                name { full native }
+                image { large }
+                siteUrl
+              }
+            }
+          }`
+        : `query ($search: String, $type: MediaType) {
+            Page(page: 1, perPage: 12) {
+              media(search: $search, type: $type, sort: POPULARITY_DESC) {
+                id
+                title { english romaji native }
+                coverImage { extraLarge large }
+                siteUrl
+              }
+            }
+          }`;
+
+      try {
+        const res = await fetch('https://graphql.anilist.co', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            query,
+            variables: isChar ? { search: q } : { search: q, type }
+          })
+        });
+
+        const json = await res.json();
+        const items = isChar
+          ? (json.data?.Page?.characters || []).map(c => ({
+              titleEn: c.name.full,
+              titleNative: c.name.native || '',
+              image: c.image.large,
+              url: c.siteUrl
+            }))
+          : (json.data?.Page?.media || []).map(m => ({
+              titleEn: m.title.english || m.title.romaji,
+              titleNative: m.title.native || '',
+              image: m.coverImage.extraLarge || m.coverImage.large,
+              url: m.siteUrl
+            }));
+
+        if (items.length === 0) {
+          searchStatusEl.textContent = '見つかりませんでした。別のキーワード（英語名や原題）でお試しください。';
+          return;
+        }
+
+        searchStatusEl.textContent = `${items.length}件ヒット（クリックで決定）`;
+        items.forEach(entry => {
+          const card = document.createElement('div');
+          card.className = 'result-card';
+          card.innerHTML = `
+            <img src="${entry.image}" alt="" loading="lazy">
+            <div class="result-info">
+              <div class="result-en">${escapeHtml(entry.titleEn)}</div>
+              <div class="result-native">${escapeHtml(entry.titleNative)}</div>
+            </div>
+          `;
+          card.onclick = () => {
+            applySelection(entry);
+          };
+          searchResultsEl.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+        searchStatusEl.textContent = '検索エラーが発生しました。通信状況をご確認ください。';
+      }
+    }
+
+    function applySelection(entry) {
+      const cat = (appData.years[currentYear] || []).find(c => c.id === editingTarget.catId);
+      if (cat) {
+        cat.items[editingTarget.rankIndex] = entry;
+        saveLocal();
+        renderCategories();
+      }
+      searchModal.classList.remove('open');
+      showToast('登録しました！');
+    }
+
+    // Custom local image upload (fallback for CORS or custom art)
+    document.getElementById('customImageInput').addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const cat = (appData.years[currentYear] || []).find(c => c.id === editingTarget.catId);
+        if (!cat) return;
+        const currentItem = cat.items[editingTarget.rankIndex] || {
+          titleEn: prompt('英語タイトルを入力してください', '') || 'Untitled',
+          titleNative: prompt('Native Title（日本語など）を入力してください', '') || '',
+          url: ''
+        };
+        currentItem.image = reader.result;
+        cat.items[editingTarget.rankIndex] = currentItem;
+        saveLocal();
+        renderCategories();
+        searchModal.classList.remove('open');
+        showToast('画像を差し替えました！');
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+    });
+
+    // Toolbar Actions: Year & Category & JSON Export/Import
+    document.getElementById('addYearBtn').onclick = () => {
+      const yr = prompt('追加する年を入力してください（例: 2027）', String(Number(currentYear) + 1));
+      if (!yr || !yr.trim()) return;
+      const cleanYr = yr.trim();
+      if (!appData.years[cleanYr]) {
+        appData.years[cleanYr] = [
+          { id: 'cat-' + Date.now(), name: 'Category Name', items: [null, null, null] }
+        ];
+      }
+      currentYear = cleanYr;
+      saveLocal();
+      render();
+      showToast(`${cleanYr}年を追加しました`);
+    };
+
+    document.getElementById('deleteYearBtn').onclick = () => {
+      const years = Object.keys(appData.years);
+      if (years.length <= 1) {
+        alert('最後の1年は削除できません。');
+        return;
+      }
+      if (confirm(`${currentYear}年のデータをすべて削除しますか？`)) {
+        delete appData.years[currentYear];
+        currentYear = Object.keys(appData.years).sort().pop();
+        saveLocal();
+        render();
+      }
+    };
+
+    document.getElementById('addCategoryBtn').onclick = () => {
+      if (!appData.years[currentYear]) appData.years[currentYear] = [];
+      appData.years[currentYear].push({
+        id: 'cat-' + Date.now(),
+        name: 'Category Name',
+        items: [null, null, null]
+      });
+      saveLocal();
+      renderCategories();
+      showToast('カテゴリーを追加しました');
+    };
+
+    document.getElementById('exportJsonBtn').onclick = () => {
+      const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'data.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('data.json をダウンロードしました');
+    };
+
+    document.getElementById('importJsonInput').addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          if (parsed && parsed.years) {
+            appData = parsed;
+            currentYear = Object.keys(appData.years).sort().pop() || currentYear;
+            saveLocal();
+            render();
+            showToast('JSONを読み込みました！');
+          } else {
+            alert('JSONの形式が正しくありません。');
+          }
+        } catch (err) {
+          alert('JSONファイルの読み込みに失敗しました。');
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    });
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    initData();
+  </script>
+</body>
+</html>
