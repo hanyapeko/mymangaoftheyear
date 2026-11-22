@@ -1,0 +1,25 @@
+{
+  "years": {
+    "2026": [
+      {
+        "id": "cat-1",
+        "name": "Mystery",
+        "items": [
+          {
+            "titleEn": "Kurumizawa's Folly",
+            "titleNative": "来見沢善彦の愚行",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx198329-6Jn9jedC5YRy.jpg",
+            "url": "https://anilist.co/manga/198329"
+          },
+          {
+            "titleEn": "Wavers",
+            "titleNative": "ウェイバーズ",
+            "image": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx206621-DjWGGOUMnjNW.jpg",
+            "url": "https://anilist.co/manga/206621"
+          },
+          null
+        ]
+      }
+    ]
+  }
+}
